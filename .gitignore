@@ -1,0 +1,44 @@
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 构建产物
+build/
+dist/
+*.exe
+*.spec.bak
+
+# 日志文件
+*.log
+build_log.txt
+logs/
+
+# ONNX导出
+*.onnx
+
+# 训练输出（中间产物）
+runs/
+
+# 数据集
+dataset/
+
+# 测试图片和结果
+test_img/
+test_results/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db

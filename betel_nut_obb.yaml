@@ -1,0 +1,24 @@
+# Betel Nut OBB Dataset Configuration
+# YOLOv8 Oriented Bounding Box (旋转框) 数据集配置
+
+# 数据集路径（相对于此yaml文件）
+path: test_img/project-1-at-2026-02-04-23-38-e5899603
+train: train/images  # 训练图像文件夹
+val: val/images      # 验证图像文件夹
+
+# 类别数量
+nc: 1
+
+# 类别名称
+names:
+  0: areca
+
+# 数据集信息
+dataset_info:
+  description: "Betel nut oriented bounding box detection dataset"
+  total_images: 52
+  train_images: 42
+  val_images: 10
+  annotation_format: "YOLO OBB (x1,y1,x2,y2,x3,y3,x4,y4)"
+  created: "2026-02-04"
+

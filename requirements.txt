@@ -1,0 +1,25 @@
+# 槟榔视觉检测与切割定位系统依赖包
+
+# GUI框架（conda环境推荐使用: conda install pyqt）
+PyQt5>=5.15.0
+
+# 图像处理
+numpy<2,>=1.24.0  # NumPy 2.x与PyTorch 2.1不兼容
+opencv-python>=4.8.0
+
+# Modbus通讯 (可选，如果安装失败会自动使用Mock模式)
+modbus-tk>=1.1.3  # 实际项目使用modbus_tk，不是pymodbus
+pyserial>=3.5  # modbus_tk的依赖
+
+# 深度学习/视觉算法
+ultralytics>=8.0.0  # YOLO v8/v11
+
+# PyTorch（ultralytics依赖）
+# 推荐使用稳定的2.1.2版本CPU版本避免DLL问题:
+# pip install torch==2.1.2 torchvision==0.16.2 --index-url https://download.pytorch.org/whl/cpu
+torch==2.1.2
+torchvision==0.16.2
+
+# 可选：加速和优化
+# onnx>=1.14.0       # ONNX导出
+# onnxruntime>=1.15.0  # ONNX推理加速
