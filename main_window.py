@@ -61,7 +61,8 @@ class CameraWidget(QGroupBox):
         labels = [
             ('X(mm):', 'x'), ('Y(mm):', 'y'),
             ('R(°):', 'r'), ('H(mm):', 'h'),
-            ('分类:', 'class'), ('置信度:', 'conf')
+            ('L(mm):', 'l'), ('朝向:', 'head'),
+            ('分类:', 'class'), ('置信度:', 'conf'),
         ]
         
         for i, (text, key) in enumerate(labels):
@@ -129,7 +130,11 @@ class CameraWidget(QGroupBox):
         self.data_labels['y'].setText(f"{result.y_offset:.1f}")
         self.data_labels['r'].setText(f"{result.r_angle:.1f}°")
         self.data_labels['h'].setText(f"{result.height:.1f}")
-        
+        self.data_labels['l'].setText(f"{result.length:.1f}")
+
+        head_text = {1: "← 左", 2: "右 →", 0: "--"}.get(result.head_direction, "--")
+        self.data_labels['head'].setText(head_text)
+
         class_text = {1: "无法识别", 2: "可切", 3: "备用"}.get(result.classification, "未知")
         self.data_labels['class'].setText(class_text)
         self.data_labels['conf'].setText(f"{result.confidence:.2f}")

@@ -52,109 +52,22 @@ def get_default_config() -> Dict[str, Any]:
         },
         "cameras": [
             {
-                "id": 1,
-                "name": "Camera 1",
-                "ip": "192.168.1.10",
+                "id": i + 1,
+                "name": f"Camera {i + 1}",
+                "ip": f"192.168.1.{10 + i}",
+                "pixel_to_mm": 0.1,
                 "registers": {
-                    "trigger": 100,
-                    "class": 101,
-                    "x_offset": 102,
-                    "y_offset": 103,
-                    "r_angle": 104,
-                    "height": 105
-                }
-            },
-            {
-                "id": 2,
-                "name": "Camera 2",
-                "ip": "192.168.1.11",
-                "registers": {
-                    "trigger": 110,
-                    "class": 111,
-                    "x_offset": 112,
-                    "y_offset": 113,
-                    "r_angle": 114,
-                    "height": 115
-                }
-            },
-            {
-                "id": 3,
-                "name": "Camera 3",
-                "ip": "192.168.1.12",
-                "registers": {
-                    "trigger": 120,
-                    "class": 121,
-                    "x_offset": 122,
-                    "y_offset": 123,
-                    "r_angle": 124,
-                    "height": 125
-                }
-            },
-            {
-                "id": 4,
-                "name": "Camera 4",
-                "ip": "192.168.1.13",
-                "registers": {
-                    "trigger": 130,
-                    "class": 131,
-                    "x_offset": 132,
-                    "y_offset": 133,
-                    "r_angle": 134,
-                    "height": 135
-                }
-            },
-            {
-                "id": 5,
-                "name": "Camera 5",
-                "ip": "192.168.1.14",
-                "registers": {
-                    "trigger": 140,
-                    "class": 141,
-                    "x_offset": 142,
-                    "y_offset": 143,
-                    "r_angle": 144,
-                    "height": 145
-                }
-            },
-            {
-                "id": 6,
-                "name": "Camera 6",
-                "ip": "192.168.1.15",
-                "registers": {
-                    "trigger": 150,
-                    "class": 151,
-                    "x_offset": 152,
-                    "y_offset": 153,
-                    "r_angle": 154,
-                    "height": 155
-                }
-            },
-            {
-                "id": 7,
-                "name": "Camera 7",
-                "ip": "192.168.1.16",
-                "registers": {
-                    "trigger": 160,
-                    "class": 161,
-                    "x_offset": 162,
-                    "y_offset": 163,
-                    "r_angle": 164,
-                    "height": 165
-                }
-            },
-            {
-                "id": 8,
-                "name": "Camera 8",
-                "ip": "192.168.1.17",
-                "registers": {
-                    "trigger": 170,
-                    "class": 171,
-                    "x_offset": 172,
-                    "y_offset": 173,
-                    "r_angle": 174,
-                    "height": 175
+                    "trigger": 100 + i * 10,
+                    "class": 101 + i * 10,
+                    "x_offset": 102 + i * 10,
+                    "y_offset": 103 + i * 10,
+                    "r_angle": 104 + i * 10,
+                    "height": 105 + i * 10,
+                    "head_direction": 106 + i * 10,
+                    "length": 107 + i * 10
                 }
             }
+            for i in range(8)
         ],
         "trigger_values": {
             "READY": 10,

@@ -9,7 +9,7 @@ import numpy as np
 from PyQt5.QtCore import QThread, pyqtSignal
 from typing import Optional
 
-from config import TRIGGER_VALUES, CLASS_VALUES, POLL_INTERVAL, CAMERA_PARAMS, MODEL_CONFIG
+from config import TRIGGER_VALUES, CLASS_VALUES, POLL_INTERVAL, CAMERA_PARAMS
 from plc_manager import PlcManager
 from vision_detector import VisionDetector, DetectionResult
 from hikvision_camera import HikvisionCamera, ImageFolderCamera, HIKVISION_SDK_AVAILABLE
@@ -50,8 +50,7 @@ class CameraWorker(QThread):
         
         self.plc = plc_manager
         self.detector = VisionDetector(
-            model_path=MODEL_CONFIG['model_path'],
-            pixel_to_mm=self.pixel_to_mm  # 传递标定参数
+            pixel_to_mm=self.pixel_to_mm
         )
         
         self.camera = None
@@ -232,51 +231,55 @@ class CameraWorker(QThread):
     def _write_result_to_plc(self, result: DetectionResult):
         """
         将识别结果写入PLC
-        
-        Args:
-            result: 检测结果
+
+        寄存器布局（以Camera 1为例）：
+            MW101  class            分类
+            MW102  x_offset         X偏移 (×10)
+            MW103  y_offset         Y偏移 (×10)
+            MW104  r_angle          旋转角 (×10)
+            MW105  height           短轴高度 (×10)
+            MW106  head_direction   尖头朝向 1=左 2=右
+            MW107  length           长轴长度 (×10)
         """
         try:
-            # 1. 写入分类信号
             logger.info(f"[{self.camera_name}] 写入分类结果 D{self.registers['class']}={result.classification}")
             if not self.plc.write_holding_register(self.registers['class'], result.classification):
                 self.error_occurred.emit(f"[{self.camera_name}] ❌ 写入分类信号失败 D{self.registers['class']}")
                 return
-            
-            # 2. 仅当分类为2(可切)时，写入坐标和角度数据
+
             if result.classification == CLASS_VALUES['CUTTABLE']:
-                # 将浮点数转换为整数（Modbus寄存器范围: -32768 ~ 32767）
-                # 精度: 乘以10保留1位小数，范围: -3276.8 ~ 3276.7
-                x_int = int(result.x_offset * 10)  # 保留1位小数
-                y_int = int(result.y_offset * 10)
-                r_int = int(result.r_angle * 10)
-                h_int = int(result.height * 10)
-                
-                # 数值范围检查和裁剪（防止超出Modbus寄存器范围）
                 def clamp_int16(value):
-                    """将值限制在int16范围内"""
                     return max(-32768, min(32767, value))
-                
-                x_int = clamp_int16(x_int)
-                y_int = clamp_int16(y_int)
-                r_int = clamp_int16(r_int)
-                h_int = clamp_int16(h_int)
-                
-                # 批量写入多个寄存器
-                values = [x_int, y_int, r_int, h_int]
-                logger.info(f"[{self.camera_name}] 原始值: X={result.x_offset:.2f}, Y={result.y_offset:.2f}, R={result.r_angle:.2f}, H={result.height:.2f}")
-                logger.info(f"[{self.camera_name}] 转换后: D{self.registers['x_offset']}~D{self.registers['height']} = {values}")
+
+                x_int = clamp_int16(int(result.x_offset * 10))
+                y_int = clamp_int16(int(result.y_offset * 10))
+                r_int = clamp_int16(int(result.r_angle * 10))
+                h_int = clamp_int16(int(result.height * 10))
+                head_int = int(result.head_direction)
+                l_int = clamp_int16(int(result.length * 10))
+
+                # x_offset ~ length 寄存器连续: 102,103,104,105,106,107
+                values = [x_int, y_int, r_int, h_int, head_int, l_int]
+                logger.info(
+                    f"[{self.camera_name}] 原始值: X={result.x_offset:.2f}, Y={result.y_offset:.2f}, "
+                    f"R={result.r_angle:.2f}, H={result.height:.2f}, "
+                    f"Head={result.head_direction}, L={result.length:.2f}"
+                )
+                logger.info(f"[{self.camera_name}] 转换后: D{self.registers['x_offset']}~D{self.registers['length']} = {values}")
+
                 if self.plc.write_multiple_registers(self.registers['x_offset'], values):
                     self.log_message.emit(
-                        f"[{self.camera_name}] ✓ 结果已写入PLC: "
-                        f"X={result.x_offset:.1f}, Y={result.y_offset:.1f}, "
-                        f"R={result.r_angle:.1f}°, H={result.height:.1f}mm"
+                        f"[{self.camera_name}] ✓ PLC: "
+                        f"X={result.x_offset:.1f} Y={result.y_offset:.1f} "
+                        f"R={result.r_angle:.1f}° H={result.height:.1f}mm "
+                        f"L={result.length:.1f}mm "
+                        f"Head={'左' if result.head_direction == 1 else '右'}"
                     )
                 else:
                     self.error_occurred.emit(f"[{self.camera_name}] ❌ 写入坐标数据失败 D{self.registers['x_offset']}")
             else:
                 self.log_message.emit(f"[{self.camera_name}] 分类={result.classification}，跳过坐标写入")
-                
+
         except Exception as e:
             import traceback
             self.error_occurred.emit(f"[{self.camera_name}] ❌ 写入结果异常: {type(e).__name__}: {str(e)}")

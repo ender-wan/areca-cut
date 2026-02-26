@@ -20,7 +20,9 @@
                 "x_offset": 102,
                 "y_offset": 103,
                 "r_angle": 104,
-                "height": 105
+                "height": 105,
+                "head_direction": 106,
+                "length": 107
             }
         },
         {
@@ -34,7 +36,9 @@
                 "x_offset": 112,
                 "y_offset": 113,
                 "r_angle": 114,
-                "height": 115
+                "height": 115,
+                "head_direction": 116,
+                "length": 117
             }
         },
         {
@@ -48,7 +52,9 @@
                 "x_offset": 122,
                 "y_offset": 123,
                 "r_angle": 124,
-                "height": 125
+                "height": 125,
+                "head_direction": 126,
+                "length": 127
             }
         },
         {
@@ -62,7 +68,9 @@
                 "x_offset": 132,
                 "y_offset": 133,
                 "r_angle": 134,
-                "height": 135
+                "height": 135,
+                "head_direction": 136,
+                "length": 137
             }
         },
         {
@@ -76,7 +84,9 @@
                 "x_offset": 142,
                 "y_offset": 143,
                 "r_angle": 144,
-                "height": 145
+                "height": 145,
+                "head_direction": 146,
+                "length": 147
             }
         },
         {
@@ -90,7 +100,9 @@
                 "x_offset": 152,
                 "y_offset": 153,
                 "r_angle": 154,
-                "height": 155
+                "height": 155,
+                "head_direction": 156,
+                "length": 157
             }
         },
         {
@@ -104,7 +116,9 @@
                 "x_offset": 162,
                 "y_offset": 163,
                 "r_angle": 164,
-                "height": 165
+                "height": 165,
+                "head_direction": 166,
+                "length": 167
             }
         },
         {
@@ -118,7 +132,9 @@
                 "x_offset": 172,
                 "y_offset": 173,
                 "r_angle": 174,
-                "height": 175
+                "height": 175,
+                "head_direction": 176,
+                "length": 177
             }
         }
     ],
